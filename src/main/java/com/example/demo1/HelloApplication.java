@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 
 import static java.lang.System.out;
+import static java.lang.System.setOut;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -142,28 +143,32 @@ public class HelloApplication extends Application {
         EventHandler<MouseEvent> innerGridEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                mainVbox.getChildren().forEach(h->{
-                    CheckBox taskChecBox = new CheckBox(h.getAccessibleText());
-                    taskChecBox.setSelected(false);
-                    if( h.getTranslateX()<=scene.getWidth()*(3/10)) {
-                        if (h.getTranslateX() >= scene.getWidth() * (5/10) ){
-                            if (h.getTranslateY() >= scene.getHeight() * (3/10+1/2)) {
-                                innerGridPane.setConstraints(taskChecBox, 1, 1);
+            for(javafx.scene.Node node :mainVbox.getChildren()){
+                        Label lbl = (Label) node;
+                        out.println(node);
+                        CheckBox taskChecBox = new CheckBox(lbl.getText());
+                        taskChecBox.setSelected(false);
+                        out.println(root.getWidth() * (3 / 10));
+                        if (node.getTranslateX() <= (root.getWidth() * (3 / 10))) {
+
+                            if (node.getTranslateX() >= root.getWidth() * (5 / 10)) {
+                                if (node.getTranslateY() >= root.getHeight() * (3 / 10 + 1 / 2)) {
+                                    innerGridPane.setConstraints(taskChecBox, 1, 1);
+                                } else {
+                                    innerGridPane.setConstraints(taskChecBox, 1, 0);
+                                }
+                                mainVbox.getChildren().remove(node);
                             } else {
-                                innerGridPane.setConstraints(taskChecBox, 1, 0);
+                                innerGridPane.setConstraints(taskChecBox, 0, 0);
+                                mainVbox.getChildren().remove(node);
                             }
-                            mainVbox.getChildren().remove(h);
-                        } else {
-                            innerGridPane.setConstraints(taskChecBox, 0, 0);
-                            mainVbox.getChildren().remove(h);
                         }
                     }
-                });
             }
 
 
         };
-        innerGridPane.addEventFilter(MouseEvent.MOUSE_DRAGGED, innerGridEventHandler );
+        innerGridPane.addEventFilter(MouseEvent.MOUSE_RELEASED, innerGridEventHandler );
         stage.setTitle("Eisenhower-Matrix");
         stage.setScene(scene);
         stage.show();
