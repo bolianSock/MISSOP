@@ -30,13 +30,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.CheckBox;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
-
+import javafx.stage.Window;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class HelloApplication extends Application {
     static ArrayList< Label > labels = new ArrayList<Label>();
     static int i=0;
+
+    Window window;
 
     Color lighterDarck = Color.web("#2E3239") ;
     Color mainColor = Color.web("#23262C",1.0);
@@ -140,38 +142,41 @@ public class HelloApplication extends Application {
 
 
         Scene scene = new Scene(root,850,800);
+
+        stage.setTitle("Eisenhower-Matrix");
+        stage.setScene(scene);
+        double height= scene.getHeight();
+        double width= scene.getWidth();
+        stage.show();
         EventHandler<MouseEvent> innerGridEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-            for(javafx.scene.Node node :mainVbox.getChildren()){
-                        Label lbl = (Label) node;
-                        out.println(node);
-                        CheckBox taskChecBox = new CheckBox(lbl.getText());
-                        taskChecBox.setSelected(false);
-                        out.println(root.getWidth() * (3 / 10));
-                        if (node.getTranslateX() <= (root.getWidth() * (3 / 10))) {
+                for(Label movinLbl :labels){
 
-                            if (node.getTranslateX() >= root.getWidth() * (5 / 10)) {
-                                if (node.getTranslateY() >= root.getHeight() * (3 / 10 + 1 / 2)) {
-                                    innerGridPane.setConstraints(taskChecBox, 1, 1);
-                                } else {
-                                    innerGridPane.setConstraints(taskChecBox, 1, 0);
-                                }
-                                mainVbox.getChildren().remove(node);
+
+                    out.println(height *(double) (3 / 10));
+                    if (relocate.getCurrentX() >= (width * (double)(3 / 10))) {
+                        CheckBox taskChecBox = new CheckBox(movinLbl.getText());
+                        taskChecBox.setSelected(false);
+                        if (relocate.getCurrentX() >= width * (double)(13/ 20)) {
+                            if (relocate.getCurrentY() >= height * (double) (5 / 10)) {
+                                innerGridPane.add(taskChecBox, 0, 0);
                             } else {
-                                innerGridPane.setConstraints(taskChecBox, 0, 0);
-                                mainVbox.getChildren().remove(node);
+                                innerGridPane.add(taskChecBox, 1, 0);
                             }
+                            mainVbox.getChildren().remove(movinLbl);
+
+                        } else {
+                            innerGridPane.add(taskChecBox, 1, 1);
+                            mainVbox.getChildren().remove(movinLbl);
                         }
                     }
+                }
             }
 
 
         };
         innerGridPane.addEventFilter(MouseEvent.MOUSE_RELEASED, innerGridEventHandler );
-        stage.setTitle("Eisenhower-Matrix");
-        stage.setScene(scene);
-        stage.show();
     }
 
     public static void main(String[] args) {

@@ -24,6 +24,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.CheckBox;
 class MyEventHandler {
     private double startX;
+
+    public double getCurrentX() {
+       return  this.currentX;
+    }
+
+    public double getCurrentY() {
+        return  this.currentY;
+    }
+    private double currentX;
+    private double currentY;
     private double startY;
 
     void eventHandler(javafx.scene.Node node) {
@@ -33,8 +43,10 @@ class MyEventHandler {
                         startY = e.getSceneY() - node.getTranslateY();
                     });
                     node.setOnMouseDragged(e -> {
-                        node.setTranslateX(e.getSceneX() - startX);
-                        node.setTranslateY(e.getSceneY() - startY);
+                        currentX=e.getSceneX() - startX;
+                        currentY= e.getSceneY() - startY;
+                        node.setTranslateX(currentX);
+                        node.setTranslateY( currentY);
                     });
     }
 }
